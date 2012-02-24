@@ -1,4 +1,5 @@
-== nextnode
+nextnode
+========
 
 nextnode is a Sinatra application to reserve and return the name of a jenkins node
 for a RightScale server array (because a server in an array does not know its node name
