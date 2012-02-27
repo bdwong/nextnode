@@ -12,8 +12,12 @@ class Reservation
 end
 
 def get_nodes_json
-  `curl http://localhost:8080/jenkins/computer/api/json`
   # File.read("sampledata/computer2.out")
+  nodes = `curl http://localhost:8080/jenkins/computer/api/json`
+  if $? != 0
+    raise RuntimeError.new('Error executing curl.')
+  end
+  nodes
 end
 
 def get_nodes
@@ -31,7 +35,12 @@ end
 
 # Reserve the node for the next x minutes.
 get "/nextnode" do
-  computers = get_nodes
+  begin
+    computers = get_nodes
+  rescue RuntimeError => e
+    # indicate internal server error.
+    return 500
+  end
   #puts "regex nil? #{@params["regex"].nil?}"
   found = computers["computer"].find do |c|
     (
